@@ -5,10 +5,10 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFoundException> {
+public class InvalidInputExceptionMapper implements ExceptionMapper<InvalidInputException> {
     @Override
-    public Response toResponse(BookNotFoundException exception) {
-        return Response.status(Response.Status.NOT_FOUND)
+    public Response toResponse(InvalidInputException exception) {
+        return Response.status(Response.Status.BAD_REQUEST)
                 .entity("{\"error\": \"" + exception.getMessage() + "\"}")
                 .type("application/json")
                 .build();
