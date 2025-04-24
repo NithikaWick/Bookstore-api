@@ -3,25 +3,36 @@ package org.example.resource;
 import org.example.DataStore;
 import org.example.exception.AuthorNotFoundException;
 import org.example.model.Author;
+import org.example.model.Book;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/authors")
 public class AuthorResource {
     private final DataStore dataStore = DataStore.getInstance();
 
-    // GET /authors - Retrieve all authors
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createAuthor(Author author) {
+        int id = dataStore.getNextAuthorId();
+        author.setId(id);
+        dataStore.getAuthors().put(id, author);
+        return Response.status(Response.Status.CREATED)
+                .entity(author)
+                .build();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Author> getAllAuthors() {
-        return new ArrayList<>(dataStore.getAuthors().values());
+        return dataStore.getAuthors().values().stream().collect(Collectors.toList());
     }
 
-    // GET /authors/{id} - Retrieve an author by ID
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,16 +44,39 @@ public class AuthorResource {
         return author;
     }
 
-    // POST /authors - Create a new author
-    @POST
+    @PUT
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createAuthor(Author author) {
-        int newId = dataStore.getNextAuthorId();
-        author.setId(newId);
-        dataStore.getAuthors().put(newId, author);
-        return Response.status(Response.Status.CREATED)
-                .entity(author)
-                .build();
+    public Response updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
+        Author existingAuthor = dataStore.getAuthors().get(id);
+        if (existingAuthor == null) {
+            throw new AuthorNotFoundException("Author with ID " + id + " not found");
+        }
+        updatedAuthor.setId(id);
+        dataStore.getAuthors().put(id, updatedAuthor);
+        return Response.ok(updatedAuthor).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteAuthor(@PathParam("id") int id) {
+        Author author = dataStore.getAuthors().remove(id);
+        if (author == null) {
+            throw new AuthorNotFoundException("Author with ID " + id + " not found");
+        }
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Path("/{id}/books")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Book> getBooksByAuthor(@PathParam("id") int id) {
+        if (!dataStore.getAuthors().containsKey(id)) {
+            throw new AuthorNotFoundException("Author with ID " + id + " not found");
+        }
+        return dataStore.getBooks().values().stream()
+                .filter(book -> book.getAuthorId() == id)
+                .collect(Collectors.toList());
     }
 }

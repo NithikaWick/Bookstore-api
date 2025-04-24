@@ -2,69 +2,108 @@ package org.example.resource;
 
 import org.example.DataStore;
 import org.example.exception.BookNotFoundException;
+import org.example.exception.CartNotFoundException;
 import org.example.exception.CustomerNotFoundException;
-import org.example.exception.InsufficientStockException;
+import org.example.exception.InvalidInputException;
+import org.example.exception.OutOfStockException;
 import org.example.model.Book;
 import org.example.model.Cart;
 import org.example.model.CartItemRequest;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/customers/{customerId}/cart")
 public class CartResource {
     private final DataStore dataStore = DataStore.getInstance();
 
-    // GET /customers/{customerId}/cart - Retrieve a customer's cart
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Cart getCart(@PathParam("customerId") int customerId) {
-        // Check if customer exists
         if (!dataStore.getCustomers().containsKey(customerId)) {
             throw new CustomerNotFoundException("Customer with ID " + customerId + " not found");
         }
         Cart cart = dataStore.getCarts().get(customerId);
         if (cart == null) {
-            cart = new Cart(customerId);
-            dataStore.getCarts().put(customerId, cart);
+            throw new CartNotFoundException("Cart for customer ID " + customerId + " not found");
         }
         return cart;
     }
 
-    // POST /customers/{customerId}/cart - Add a book to the cart
     @POST
+    @Path("/items")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addToCart(@PathParam("customerId") int customerId, CartItemRequest request) {
-        // Validate customer
         if (!dataStore.getCustomers().containsKey(customerId)) {
             throw new CustomerNotFoundException("Customer with ID " + customerId + " not found");
         }
-
-        // Validate book
-        Book book = dataStore.getBooks().get(request.getBookId());
-        if (book == null) {
-            throw new BookNotFoundException("Book with ID " + request.getBookId() + " not found");
-        }
-
-        // Check stock
-        int currentStock = book.getStock();
-        int requestedQuantity = request.getQuantity();
-        if (requestedQuantity <= 0) {
-            throw new InsufficientStockException("Quantity must be greater than 0");
-        }
-        if (currentStock < requestedQuantity) {
-            throw new InsufficientStockException("Insufficient stock for book ID " + request.getBookId() + ". Available: " + currentStock);
-        }
-
-        // Add to cart
         Cart cart = dataStore.getCarts().get(customerId);
         if (cart == null) {
-            cart = new Cart(customerId);
-            dataStore.getCarts().put(customerId, cart);
+            throw new CartNotFoundException("Cart for customer ID " + customerId + " not found");
         }
-        cart.getItems().merge(request.getBookId(), requestedQuantity, Integer::sum);
+
+        int bookId = request.getBookId();
+        int quantity = request.getQuantity();
+        Book book = dataStore.getBooks().get(bookId);
+        if (book == null) {
+            throw new BookNotFoundException("Book with ID " + bookId + " not found");
+        }
+        if (quantity <= 0) {
+            throw new InvalidInputException("Quantity must be greater than 0");
+        }
+        int currentQuantity = cart.getItems().getOrDefault(bookId, 0);
+        int newQuantity = currentQuantity + quantity;
+        if (book.getStock() < newQuantity) {
+            throw new OutOfStockException("Insufficient stock for book ID " + bookId + ". Available: " + book.getStock());
+        }
+        cart.getItems().put(bookId, newQuantity);
+        return Response.ok(cart).build();
+    }
+
+    @PUT
+    @Path("/items/{bookId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCartItem(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId, CartItemRequest request) {
+        if (!dataStore.getCustomers().containsKey(customerId)) {
+            throw new CustomerNotFoundException("Customer with ID " + customerId + " not found");
+        }
+        Cart cart = dataStore.getCarts().get(customerId);
+        if (cart == null) {
+            throw new CartNotFoundException("Cart for customer ID " + customerId + " not found");
+        }
+        Book book = dataStore.getBooks().get(bookId);
+        if (book == null) {
+            throw new BookNotFoundException("Book with ID " + bookId + " not found");
+        }
+        int quantity = request.getQuantity();
+        if (quantity <= 0) {
+            throw new InvalidInputException("Quantity must be greater than 0");
+        }
+        if (book.getStock() < quantity) {
+            throw new OutOfStockException("Insufficient stock for book ID " + bookId + ". Available: " + book.getStock());
+        }
+        cart.getItems().put(bookId, quantity);
+        return Response.ok(cart).build();
+    }
+
+    @DELETE
+    @Path("/items/{bookId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeCartItem(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {
+        if (!dataStore.getCustomers().containsKey(customerId)) {
+            throw new CustomerNotFoundException("Customer with ID " + customerId + " not found");
+        }
+        Cart cart = dataStore.getCarts().get(customerId);
+        if (cart == null) {
+            throw new CartNotFoundException("Cart for customer ID " + customerId + " not found");
+        }
+        if (!cart.getItems().containsKey(bookId)) {
+            throw new BookNotFoundException("Book with ID " + bookId + " not found in cart");
+        }
+        cart.getItems().remove(bookId);
         return Response.ok(cart).build();
     }
 }
