@@ -1,4 +1,4 @@
-package org.example.model;
+package org.bookstore.model;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

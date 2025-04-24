@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.bookstore.exception;
 
 public class CartNotFoundException extends RuntimeException {
     public CartNotFoundException(String message) {

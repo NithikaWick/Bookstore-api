@@ -1,12 +1,12 @@
-package org.example;
+package org.bookstore;
 
 import jakarta.ws.rs.ApplicationPath;
-import org.example.exception.*;
-import org.example.resource.AuthorResource;
-import org.example.resource.BookResource;
-import org.example.resource.CartResource;
-import org.example.resource.CustomerResource;
-import org.example.resource.OrderResource;
+import org.bookstore.exception.*;
+import org.bookstore.resource.AuthorResource;
+import org.bookstore.resource.BookResource;
+import org.bookstore.resource.CartResource;
+import org.bookstore.resource.CustomerResource;
+import org.bookstore.resource.OrderResource;
 import org.glassfish.jersey.server.ResourceConfig;
 
 @ApplicationPath("/api")

@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.bookstore.exception;
 
 public class OrderNotFoundException extends RuntimeException {
     public OrderNotFoundException(String message) {

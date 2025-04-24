@@ -1,13 +1,13 @@
-package org.example.resource;
+package org.bookstore.resource;
 
-import org.example.DataStore;
-import org.example.exception.CustomerNotFoundException;
-import org.example.exception.OrderNotFoundException;
-import org.example.exception.CartNotFoundException;
-import org.example.exception.OutOfStockException;
-import org.example.model.Book;
-import org.example.model.Cart;
-import org.example.model.Order;
+import org.bookstore.DataStore;
+import org.bookstore.exception.CustomerNotFoundException;
+import org.bookstore.exception.OrderNotFoundException;
+import org.bookstore.exception.CartNotFoundException;
+import org.bookstore.exception.OutOfStockException;
+import org.bookstore.model.Book;
+import org.bookstore.model.Cart;
+import org.bookstore.model.Order;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -37,7 +37,7 @@ public class OrderResource {
         }
 
         if (cart.getItems().isEmpty()) {
-            throw new org.example.exception.InvalidInputException("Cannot create order with empty cart");
+            throw new org.bookstore.exception.InvalidInputException("Cannot create order with empty cart");
         }
 
         // Check stock availability and calculate total
@@ -50,7 +50,7 @@ public class OrderResource {
 
             Book book = dataStore.getBooks().get(bookId);
             if (book == null) {
-                throw new org.example.exception.BookNotFoundException("Book with ID " + bookId + " not found");
+                throw new org.bookstore.exception.BookNotFoundException("Book with ID " + bookId + " not found");
             }
 
             if (book.getStock() < quantity) {

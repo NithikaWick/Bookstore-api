@@ -1,4 +1,4 @@
-package org.example.model;
+package org.bookstore.model;
 
 import java.util.HashMap;
 import java.util.Map;

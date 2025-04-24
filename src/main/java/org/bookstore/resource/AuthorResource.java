@@ -1,9 +1,9 @@
-package org.example.resource;
+package org.bookstore.resource;
 
-import org.example.DataStore;
-import org.example.exception.AuthorNotFoundException;
-import org.example.model.Author;
-import org.example.model.Book;
+import org.bookstore.DataStore;
+import org.bookstore.exception.AuthorNotFoundException;
+import org.bookstore.model.Author;
+import org.bookstore.model.Book;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

@@ -1,14 +1,14 @@
-package org.example.exception;
+package org.bookstore.exception;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class CartNotFoundExceptionMapper implements ExceptionMapper<CartNotFoundException> {
+public class OutOfStockExceptionMapper implements ExceptionMapper<OutOfStockException> {
     @Override
-    public Response toResponse(CartNotFoundException exception) {
-        return Response.status(Response.Status.NOT_FOUND)
+    public Response toResponse(OutOfStockException exception) {
+        return Response.status(Response.Status.BAD_REQUEST)
                 .entity("{\"error\": \"" + exception.getMessage() + "\"}")
                 .type("application/json")
                 .build();

@@ -1,8 +1,8 @@
-package org.example.resource;
+package org.bookstore.resource;
 
-import org.example.DataStore;
-import org.example.exception.CustomerNotFoundException;
-import org.example.model.Customer;
+import org.bookstore.DataStore;
+import org.bookstore.exception.CustomerNotFoundException;
+import org.bookstore.model.Customer;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -20,15 +20,15 @@ public class CustomerResource {
     public Response createCustomer(Customer customer) {
         // Basic validation
         if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            throw new org.example.exception.InvalidInputException("Customer name cannot be empty");
+            throw new org.bookstore.exception.InvalidInputException("Customer name cannot be empty");
         }
 
         if (customer.getEmail() == null || customer.getEmail().trim().isEmpty() || !customer.getEmail().contains("@")) {
-            throw new org.example.exception.InvalidInputException("Invalid email format");
+            throw new org.bookstore.exception.InvalidInputException("Invalid email format");
         }
 
         if (customer.getPassword() == null || customer.getPassword().trim().isEmpty()) {
-            throw new org.example.exception.InvalidInputException("Password cannot be empty");
+            throw new org.bookstore.exception.InvalidInputException("Password cannot be empty");
         }
 
         int id = dataStore.getNextCustomerId();
@@ -36,7 +36,7 @@ public class CustomerResource {
         dataStore.getCustomers().put(id, customer);
 
         // Create an empty cart for the new customer
-        dataStore.getCarts().put(id, new org.example.model.Cart(id));
+        dataStore.getCarts().put(id, new org.bookstore.model.Cart(id));
 
         return Response.status(Response.Status.CREATED)
                 .entity(customer)
@@ -72,15 +72,15 @@ public class CustomerResource {
 
         // Basic validation
         if (updatedCustomer.getName() == null || updatedCustomer.getName().trim().isEmpty()) {
-            throw new org.example.exception.InvalidInputException("Customer name cannot be empty");
+            throw new org.bookstore.exception.InvalidInputException("Customer name cannot be empty");
         }
 
         if (updatedCustomer.getEmail() == null || updatedCustomer.getEmail().trim().isEmpty() || !updatedCustomer.getEmail().contains("@")) {
-            throw new org.example.exception.InvalidInputException("Invalid email format");
+            throw new org.bookstore.exception.InvalidInputException("Invalid email format");
         }
 
         if (updatedCustomer.getPassword() == null || updatedCustomer.getPassword().trim().isEmpty()) {
-            throw new org.example.exception.InvalidInputException("Password cannot be empty");
+            throw new org.bookstore.exception.InvalidInputException("Password cannot be empty");
         }
 
         updatedCustomer.setId(id);

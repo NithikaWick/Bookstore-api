@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.bookstore.exception;
 
 public class AuthorNotFoundException extends RuntimeException {
     public AuthorNotFoundException(String message) {

@@ -1,14 +1,14 @@
-package org.example.resource;
+package org.bookstore.resource;
 
-import org.example.DataStore;
-import org.example.exception.BookNotFoundException;
-import org.example.exception.CartNotFoundException;
-import org.example.exception.CustomerNotFoundException;
-import org.example.exception.InvalidInputException;
-import org.example.exception.OutOfStockException;
-import org.example.model.Book;
-import org.example.model.Cart;
-import org.example.model.CartItemRequest;
+import org.bookstore.DataStore;
+import org.bookstore.exception.BookNotFoundException;
+import org.bookstore.exception.CartNotFoundException;
+import org.bookstore.exception.CustomerNotFoundException;
+import org.bookstore.exception.InvalidInputException;
+import org.bookstore.exception.OutOfStockException;
+import org.bookstore.model.Book;
+import org.bookstore.model.Cart;
+import org.bookstore.model.CartItemRequest;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
