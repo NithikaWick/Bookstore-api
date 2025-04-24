@@ -9,7 +9,7 @@ public class Book {
     private double price;
     private int stock;
 
-    // Constructor
+    // Constructors
     public Book() {}
 
     public Book(int id, String title, int authorId, String isbn, int publicationYear, double price, int stock) {
@@ -77,18 +77,5 @@ public class Book {
 
     public void setStock(int stock) {
         this.stock = stock;
-    }
-    // Optional: Add toString for better logging during testing
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", authorId=" + authorId +
-                ", isbn='" + isbn + '\'' +
-                ", publicationYear=" + publicationYear +
-                ", price=" + price +
-                ", stock=" + stock +
-                '}';
     }
 }

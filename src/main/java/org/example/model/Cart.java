@@ -5,29 +5,29 @@ import java.util.Map;
 
 public class Cart {
     private int customerId;
-    private Map<Integer, Integer> items; // Map of bookId to quantity
+    private Map<Integer, Integer> items = new HashMap<>(); // bookId -> quantity
 
-    // Constructor
-    public Cart() {
-        this.items = new HashMap<>();
-    }
+    // Constructors
+    public Cart() {}
 
     public Cart(int customerId) {
         this.customerId = customerId;
-        this.items = new HashMap<>();
     }
 
     // Getters and Setters
-    public int getCustomerId() { return customerId; }
-    public void setCustomerId(int customerId) { this.customerId = customerId; }
-    public Map<Integer, Integer> getItems() { return items; }
-    public void setItems(Map<Integer, Integer> items) { this.items = items; }
+    public int getCustomerId() {
+        return customerId;
+    }
 
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "customerId=" + customerId +
-                ", items=" + items +
-                '}';
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public Map<Integer, Integer> getItems() {
+        return items;
+    }
+
+    public void setItems(Map<Integer, Integer> items) {
+        this.items = items;
     }
 }
