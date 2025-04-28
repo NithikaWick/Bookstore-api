@@ -1,47 +1,58 @@
 # Bookstore API
+A RESTful API for a bookstore management system built with JAX-RS.
+## Overview
+This Bookstore API provides endpoints to manage authors, books, customers, shopping carts, and orders. It supports standard CRUD operations with appropriate validation and error handling. The API is designed to demonstrate RESTful principles using JAX-RS without relying on external libraries or frameworks beyond the core requirements.
+## Key Features
+- **Authors Management**: Create, read, update, and delete authors
+- **Books Management**: Manage books with validation for prices, publication years, and availability
+- **Customers Management**: Register and manage customer accounts
+- **Shopping Cart**: Add, update, and remove items from customer carts
+- **Orders**: Place orders and view order history
+- **Error Handling**: Comprehensive exception mapping with appropriate HTTP status codes
 
-A "Bookstore" application API that allows interaction with entities such as books, authors, customers, shopping carts, and orders. 
-The focus is on applying RESTful principles and using the JAX-RS framework to create a robust, scalable backend API. 
-The project simulates a real-world e-commerce scenario, emphasizing hands-on learning in API design, implementation, and testing.
+## Technology Stack
+- JAX-RS for RESTful web services
+- JSON for data interchange
+- Java EE standards-compliant implementation
 
----
+## API Endpoints
+### Authors
+- `GET /api/authors` - Retrieve all authors
+- `GET /api/authors/{id}` - Retrieve a specific author
+- `POST /api/authors` - Create a new author
+- `PUT /api/authors/{id}` - Update an existing author
+- `DELETE /api/authors/{id}` - Delete an author
+- `GET /api/authors/{id}/books` - Get all books by a specific author
 
-## Key Components
+### Books
+- `GET /api/books` - Retrieve all books
+- `GET /api/books/{id}` - Retrieve a specific book
+- `POST /api/books` - Create a new book
+- `PUT /api/books/{id}` - Update an existing book
+- `DELETE /api/books/{id}` - Delete a book
 
-### Technology Stack
-- **JAX-RS**: Used for RESTful service implementation (Jersey).
-- **JSON**: Data format for requests and responses.
-- **Postman**: For API testing and demonstration.
-- **Apache Tomcat Server**: for deploy and serve this java based project.
-- **In-memory Data Structures**: Use of `ArrayList` and `HashMap` for data storage (no external databases or persistence frameworks).
+### Customers
+- `GET /api/customers` - Retrieve all customers
+- `GET /api/customers/{id}` - Retrieve a specific customer
+- `POST /api/customers` - Create a new customer
+- `PUT /api/customers/{id}` - Update an existing customer
+- `DELETE /api/customers/{id}` - Delete a customer
 
----
+### Cart
+- `GET /api/customers/{customerId}/cart` - View a customer's cart
+- `POST /api/customers/{customerId}/cart/items` - Add an item to the cart
+- `PUT /api/customers/{customerId}/cart/items/{bookId}` - Update cart item quantity
+- `DELETE /api/customers/{customerId}/cart/items/{bookId}` - Remove an item from the cart
 
-### Resource Classes and Endpoints
-- Implement specific endpoints for managing:
-  - **Books**: e.g., `POST /books`, `GET /books/{id}`, `DELETE /books/{id}`.
-  - **Authors**: e.g., `POST /authors`, `GET /authors/{id}`.
-  - **Customers**: e.g., `POST /customers`, `GET /customers/{id}`.
-  - **Carts**: e.g., `POST /carts`, `GET /carts/{id}`.
-  - **Orders**: e.g., `POST /orders`, `GET /orders/{id}`.
-- Each resource class (e.g., `BookResource`, `AuthorResource`) handles appropriate HTTP methods (`GET`, `POST`, `PUT`, `DELETE`).
+### Orders
+- `GET /api/customers/{customerId}/orders` - Retrieve all orders for a customer
+- `GET /api/customers/{customerId}/orders/{orderId}` - Retrieve a specific order
+- `POST /api/customers/{customerId}/orders` - Create a new order from the cart
 
----
+## Error Handling
+The API implements comprehensive error handling with appropriate HTTP status codes:
+- `400 Bad Request` - Invalid input or business rule violation
+- `404 Not Found` - Resource not found
+- `500 Internal Server Error` - Unexpected server errors
 
-### Data Models
-- Create Java classes for entities such as:
-  - `Book`: With attributes like `id`, `title`, `author`, `price`, etc.
-  - `Author`: With attributes like `id`, `name`, `biography`, etc.
-  - `Customer`: With attributes like `id`, `name`, `email`, etc.
-- Include relevant constructors, getters, and setters.
-
----
-
-### Exception Handling
-- Implement custom exceptions such as:
-  - `BookNotFoundException`
-  - `InvalidInputException`
-- Use `ExceptionMapper` to handle errors with appropriate HTTP status codes and JSON error messages.
-
----
-
+Each error response includes a descriptive message to help debug the issue.
