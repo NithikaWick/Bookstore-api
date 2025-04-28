@@ -1,25 +1,27 @@
 package org.bookstore.model;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public class Order {
     private int id;
     private int customerId;
-    private Map<Integer, Integer> items = new HashMap<>(); // bookId -> quantity
+    private Map<Integer, Integer> items; // Map of bookId -> quantity
     private double total;
-    private LocalDateTime orderDate;
+    private String orderDate;
+
+    // Static date formatter
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // Constructors
-    public Order() {}
+    public Order() {
+        setCurrentDate(); // Sets current time by default
+    }
 
-    public Order(int id, int customerId, Map<Integer, Integer> items, double total, LocalDateTime orderDate) {
-        this.id = id;
-        this.customerId = customerId;
-        this.items = items;
-        this.total = total;
-        this.orderDate = orderDate;
+    // Helper method to set current date
+    private void setCurrentDate() {
+        this.orderDate = DATE_FORMAT.format(new Date());
     }
 
     // Getters and Setters
@@ -55,11 +57,20 @@ public class Order {
         this.total = total;
     }
 
-    public LocalDateTime getOrderDate() {
+    public String getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
+    public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
+    }
+
+    // For compatibility with code that uses Date
+    public void setOrderDate(Date date) {
+        if (date != null) {
+            this.orderDate = DATE_FORMAT.format(date);
+        } else {
+            this.orderDate = null;
+        }
     }
 }
