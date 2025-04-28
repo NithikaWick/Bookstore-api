@@ -1,6 +1,6 @@
 package org.bookstore;
 
-import jakarta.ws.rs.ApplicationPath;
+import javax.ws.rs.ApplicationPath;
 import org.bookstore.exception.*;
 import org.bookstore.resource.AuthorResource;
 import org.bookstore.resource.BookResource;
