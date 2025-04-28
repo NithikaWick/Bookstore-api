@@ -2,11 +2,12 @@ package org.bookstore.resource;
 
 import org.bookstore.DataStore;
 import org.bookstore.exception.CustomerNotFoundException;
+import org.bookstore.exception.InvalidInputException;
 import org.bookstore.model.Customer;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class CustomerResource {
         if (customer.getPassword() == null || customer.getPassword().trim().isEmpty()) {
             throw new org.bookstore.exception.InvalidInputException("Password cannot be empty");
         }
+        validateCustomerData(customer);
 
         int id = dataStore.getNextCustomerId();
         customer.setId(id);
@@ -82,6 +84,7 @@ public class CustomerResource {
         if (updatedCustomer.getPassword() == null || updatedCustomer.getPassword().trim().isEmpty()) {
             throw new org.bookstore.exception.InvalidInputException("Password cannot be empty");
         }
+        validateCustomerData(updatedCustomer);
 
         updatedCustomer.setId(id);
         dataStore.getCustomers().put(id, updatedCustomer);
@@ -101,5 +104,22 @@ public class CustomerResource {
         // We would remove orders too, but they need to be looked up by customer ID
 
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    private void validateCustomerData(Customer customer) {
+        // Check for empty or null name
+        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Customer name cannot be empty");
+        }
+
+        // Check for valid email format
+        if (customer.getEmail() == null || !customer.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new InvalidInputException("Invalid email format");
+        }
+
+        // Check for password length
+        if (customer.getPassword() == null || customer.getPassword().length() < 6) {
+            throw new InvalidInputException("Password must be at least 6 characters long");
+        }
     }
 }

@@ -2,12 +2,13 @@ package org.bookstore.resource;
 
 import org.bookstore.DataStore;
 import org.bookstore.exception.AuthorNotFoundException;
+import org.bookstore.exception.InvalidInputException;
 import org.bookstore.model.Author;
 import org.bookstore.model.Book;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,9 @@ public class AuthorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createAuthor(Author author) {
+
+        validateAuthorData(author);
+
         int id = dataStore.getNextAuthorId();
         author.setId(id);
         dataStore.getAuthors().put(id, author);
@@ -53,6 +57,7 @@ public class AuthorResource {
         if (existingAuthor == null) {
             throw new AuthorNotFoundException("Author with ID " + id + " not found");
         }
+        validateAuthorData(updatedAuthor);
         updatedAuthor.setId(id);
         dataStore.getAuthors().put(id, updatedAuthor);
         return Response.ok(updatedAuthor).build();
@@ -79,4 +84,11 @@ public class AuthorResource {
                 .filter(book -> book.getAuthorId() == id)
                 .collect(Collectors.toList());
     }
+    private void validateAuthorData(Author author) {
+        // Check for empty or null name
+        if (author.getName() == null || author.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Author name cannot be empty");
+        }
+    }
+
 }

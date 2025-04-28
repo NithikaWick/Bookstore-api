@@ -9,10 +9,11 @@ import org.bookstore.model.Book;
 import org.bookstore.model.Cart;
 import org.bookstore.model.Order;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,10 +76,11 @@ public class OrderResource {
         order.setCustomerId(customerId);
         order.setItems(orderItems);
         order.setTotal(total);
-        order.setOrderDate(LocalDateTime.now());
+//        order.setOrderDate(new Date()); // Use java.util.Date instead of LocalDateTime
 
-        // Add order to data store
+// Add order to data store
         dataStore.getOrders().put(orderId, order);
+
 
         // Clear the customer's cart
         cart.getItems().clear();
