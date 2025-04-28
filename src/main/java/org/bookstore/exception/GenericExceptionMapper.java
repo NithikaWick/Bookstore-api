@@ -1,9 +1,9 @@
 package org.bookstore.exception;
 
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
-import jakarta.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+import javax.ws.rs.WebApplicationException;
 
 @Provider
 public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
